@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Aaj Ka Rashifal</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Segoe UI',sans-serif;background:#fff7f0;min-height:100vh;}
+  .header{background:linear-gradient(135deg,#ff6d00,#ff8f00);color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:100;}
+  .header h1{font-size:20px;font-weight:700;}
+  .header p{font-size:12px;opacity:0.85;margin-top:2px;}
+  .lang-row{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+  .lang-btn{padding:5px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;}
+  .lang-btn.on{background:#fff;color:#ff6d00;}
+  .lang-btn.off{background:rgba(255,255,255,0.25);color:#fff;}
+  .banner-ad{background:#e8f5e9;border:1px dashed #66bb6a;text-align:center;font-size:11px;color:#2e7d32;padding:7px;margin:8px 12px;border-radius:8px;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px;}
+  .card{background:#fff;border:1px solid #ffe0b2;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;}
+  .card:active{transform:scale(0.95);}
+  .card:hover{box-shadow:0 4px 16px rgba(255,109,0,0.13);}
+  .card .em{font-size:26px;}
+  .card .nm{font-size:12px;font-weight:700;color:#e65100;margin-top:4px;}
+  .card .sub{font-size:10px;color:#aaa;}
+  .detail{display:none;padding:12px;}
+  .dhead{background:linear-gradient(135deg,#ff6d00,#ff8f00);border-radius:16px;padding:18px;text-align:center;color:#fff;margin-bottom:10px;}
+  .dhead .em{font-size:38px;}
+  .dhead h2{font-size:18px;font-weight:700;margin-top:6px;}
+  .dhead p{font-size:12px;opacity:0.85;}
+  .pcard{background:#fff;border:1px solid #ffe0b2;border-radius:12px;padding:12px;margin-bottom:10px;}
+  .plabel{font-size:11px;color:#ff6d00;font-weight:700;margin-bottom:5px;}
+  .ptext{font-size:13px;color:#333;line-height:1.6;}
+  .lucky-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .chip{background:#ff6d00;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+  .back{display:flex;align-items:center;gap:6px;font-size:13px;color:#ff6d00;font-weight:700;cursor:pointer;background:none;border:none;padding:0 0 10px 0;}
+  .share-btn{width:100%;padding:12px;background:#ff6d00;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;}
+  .nav{display:flex;background:#fff;border-top:1px solid #eee;position:sticky;bottom:0;}
+  .nitem{flex:1;text-align:center;padding:10px 0 6px;cursor:pointer;font-size:10px;color:#bbb;border:none;background:none;}
+  .nitem.on{color:#ff6d00;}
+  .nitem span{display:block;font-size:22px;margin-bottom:2px;}
+  .ad-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:999;justify-content:center;align-items:center;}
+  .ad-box{background:#fff;border-radius:18px;padding:22px;width:88%;max-width:340px;text-align:center;}
+  .ad-box .al{font-size:10px;color:#aaa;margin-bottom:6px;}
+  .ad-box .ac{background:#e3f2fd;border-radius:10px;padding:16px;margin-bottom:12px;}
+  .ad-box .ac p{font-size:13px;color:#1565c0;font-weight:600;}
+  .ad-box .ac small{font-size:11px;color:#1976d2;display:block;margin-top:4px;}
+  .ad-close{font-size:12px;color:#ff6d00;font-weight:700;cursor:pointer;background:none;border:none;}
+  .weekly{display:none;padding:12px;}
+  .wcard{background:#fff;border:1px solid #ffe0b2;border-radius:12px;padding:12px;margin-bottom:10px;}
+  .wday{font-size:12px;color:#ff6d00;font-weight:700;margin-bottom:4px;}
+  .wtxt{font-size:13px;color:#444;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔮 Aaj Ka Rashifal</h1>
+  <p id="hdate"></p>
+  <div class="lang-row">
+    <button class="lang-btn on" onclick="setLang('hi')">हिंदी</button>
+    <button class="lang-btn off" onclick="setLang('mr')">मराठी</button>
+  </div>
+</div>
+<div class="home-screen" id="homeScreen">
+  <div class="banner-ad">📢 AdMob Banner Ad</div>
+  <div class="grid" id="rashiGrid"></div>
+</div>
+<div class="detail" id="detailScreen">
+  <button class="back" onclick="goHome()">← <span id="backTxt">वापस जाएं</span></button>
+  <div class="dhead">
+    <div class="em" id="dEm"></div>
+    <h2 id="dName"></h2>
+    <p id="dDate"></p>
+  </div>
+  <div class="banner-ad">📢 AdMob Banner Ad</div>
+  <div class="pcard"><div class="plabel" id="lbl1">💼 कार्य / व्यवसाय</div><div class="ptext" id="pt1"></div></div>
+  <div class="pcard"><div class="plabel" id="lbl2">❤️ प्रेम / परिवार</div><div class="ptext" id="pt2"></div></div>
+  <div class="pcard"><div class="plabel" id="lbl3">💰 धन / स्वास्थ्य</div><div class="ptext" id="pt3"></div></div>
+  <div class="pcard">
+    <div class="plabel">🍀 शुभ अंक / रंग / दिशा</div>
+    <div class="lucky-row">
+      <span class="chip" id="lNum"></span>
+      <span class="chip" id="lCol"></span>
+      <span class="chip" id="lDir"></span>
+    </div>
+  </div>
+  <button class="share-btn" onclick="shareApp()">📤 मित्रों को शेयर करें</button>
+</div>
+<div class="weekly" id="weeklyScreen">
+  <div class="banner-ad">📢 AdMob Banner Ad</div>
+  <div id="weeklyContent"></div>
+</div>
+<nav class="nav">
+  <button class="nitem on" id="n0" onclick="switchNav(0)"><span>🏠</span><span id="n0t">होम</span></button>
+  <button class="nitem" id="n1" onclick="switchNav(1)"><span>⭐</span><span id="n1t">आज</span></button>
+  <button class="nitem" id="n2" onclick="switchNav(2)"><span>📅</span><span id="n2t">साप्ताहिक</span></button>
+  <button class="nitem" id="n3" onclick="switchNav(3)"><span>📤</span><span id="n3t">शेयर</span></button>
+</nav>
+<div class="ad-overlay" id="adOverlay">
+  <div class="ad-box">
+    <div class="al">ADVERTISEMENT</div>
+    <div class="ac">
+      <p>📱 AdMob Interstitial Ad</p>
+      <small>हर Rashi click पर यह दिखेगा → पैसे मिलेंगे!</small>
+    </div>
+    <button class="ad-close" id="adCloseBtn" onclick="closeAd()">✕ बंद करें</button>
+  </div>
+</div>
+<script>
+const hi={names:['मेष','वृषभ','मिथुन','कर्क','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'],back:'वापस जाएं',share:'मित्रों को शेयर करें',lbl1:'💼 कार्य / व्यवसाय',lbl2:'❤️ प्रेम / परिवार',lbl3:'💰 धन / स्वास्थ्य',nav:['होम','आज','साप्ताहिक','शेयर'],dateStr:()=>new Date().toLocaleDateString('hi-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})};
+const mr={names:['मेष','वृषभ','मिथुन','कर्क','सिंह','कन्या','तूळ','वृश्चिक','धनु','मकर','कुंभ','मीन'],back:'मागे जा',share:'मित्रांना शेअर करा',lbl1:'💼 काम / व्यवसाय',lbl2:'❤️ प्रेम / कुटुंब',lbl3:'💰 पैसे / आरोग्य',nav:['होम','आज','साप्ताहिक','शेअर'],dateStr:()=>new Date().toLocaleDateString('mr-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})};
+const emojis=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+const subs=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const work=['आज नए अवसर मिलेंगे। मेहनत रंग लाएगी।','व्यापार में लाभ के संकेत हैं।','ऑफिस में तारीफ होगी।','आर्थिक मामलों में सावधान रहें।','करियर में उन्नति के योग हैं।','नौकरी में बदलाव हो सकता है।','साझेदारी फायदेमंद रहेगी।','मेहनत का फल मिलेगा।','नए प्रोजेक्ट के लिए शुभ दिन।','अनुशासन से काम करें।','नवीनता में रुचि बढ़ेगी।','नई योजना बनाएं।'];
+const love=['परिवार के साथ समय बिताएं।','प्रियजन से बात करें।','नए संबंध बनने के आसार हैं।','पारिवारिक माहौल खुशनुमा रहेगा।','दिल की बात कहें।','रिश्तों में धैर्य रखें।','प्रेम जीवन में मधुरता आएगी।','घर में सुख-शांति बनी रहेगी।','साथी के साथ समय बिताएं।','बड़ों का आशीर्वाद लें।','मित्रों का साथ मिलेगा।','सपनों को साकार करने का समय है।'];
+const money=['धन लाभ के योग हैं।','बचत पर ध्यान दें।','आर्थिक स्थिति मजबूत होगी।','खर्च नियंत्रित रखें।','धन की प्राप्ति हो सकती है।','बजट बनाकर चलें।','नई आय के स्रोत मिल सकते हैं।','पुराने निवेश से लाभ मिलेगा।','भविष्य के लिए योजना बनाएं।','मेहनत का फल मिलेगा।','नया निवेश फायदेमंद हो सकता है।','स्वास्थ्य के प्रति सजग रहें।'];
+const nums=['3','7','2','9','1','5','6','8','4','10','11','2'];
+const colors=['लाल','सफेद','हरा','पीला','सुनहरा','नीला','गुलाबी','लाल','नारंगी','काला','आसमानी','पीला'];
+const dirs=['पूर्व','दक्षिण','पश्चिम','उत्तर','पूर्व','दक्षिण','पश्चिम','उत्तर','पूर्व','दक्षिण','पश्चिम','उत्तर'];
+let lang='hi',adTimer=null,pendingIdx=-1;
+function getLang(){return lang==='hi'?hi:mr;}
+function setDate(){document.getElementById('hdate').textContent=getLang().dateStr();}
+function buildGrid(){const L=getLang();const g=document.getElementById('rashiGrid');g.innerHTML='';L.names.forEach((nm,i)=>{g.innerHTML+=`<div class="card" onclick="onRashi(${i})"><div class="em">${emojis[i]}</div><div class="nm">${nm}</div><div class="sub">${subs[i]}</div></div>`;});}
+function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach((b,i)=>{b.className='lang-btn '+(['hi','mr'][i]===l?'on':'off');});setDate();buildGrid();updateNavText();}
+function onRashi(idx){pendingIdx=idx;showAd(()=>showDetail(idx));}
+function showAd(cb){document.getElementById('adOverlay').style.display='flex';const btn=document.getElementById('adCloseBtn');btn.textContent='✕ बंद करें (5)';btn.onclick=null;let sec=5;adTimer=setInterval(()=>{sec--;if(sec<=0){clearInterval(adTimer);btn.textContent='✕ बंद करें';btn.onclick=()=>{document.getElementById('adOverlay').style.display='none';cb();};}else btn.textContent=`✕ बंद करें (${sec})`;},1000);}
+function closeAd(){clearInterval(adTimer);document.getElementById('adOverlay').style.display='none';if(pendingIdx>=0)showDetail(pendingIdx);}
+function showDetail(idx){const L=getLang();document.getElementById('homeScreen').style.display='none';document.getElementById('weeklyScreen').style.display='none';document.getElementById('detailScreen').style.display='block';document.getElementById('dEm').textContent=emojis[idx];document.getElementById('dName').textContent=L.names[idx]+' राशिफल';document.getElementById('dDate').textContent=L.dateStr();document.getElementById('backTxt').textContent=L.back;document.getElementById('lbl1').textContent=L.lbl1;document.getElementById('lbl2').textContent=L.lbl2;document.getElementById('lbl3').textContent=L.lbl3;document.getElementById('pt1').textContent=work[idx];document.getElementById('pt2').textContent=love[idx];document.getElementById('pt3').textContent=money[idx];document.getElementById('lNum').textContent='अंक: '+nums[idx];document.getElementById('lCol').textContent='रंग: '+colors[idx];document.getElementById('lDir').textContent='दिशा: '+dirs[idx];document.querySelector('.share-btn').textContent='📤 '+L.share;}
+function goHome(){document.getElementById('detailScreen').style.display='none';document.getElementById('homeScreen').style.display='block';switchNav(0);}
+function shareApp(){if(navigator.share){navigator.share({title:'Aaj Ka Rashifal',text:'Roz apna rashifal padho! 🔮',url:window.location.href});}else{alert('मित्रों को यह app शेयर करें!');}}
+function buildWeekly(){const days=['सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार','रविवार'];const preds=['नए अवसर आएंगे।','रिश्तों में मधुरता।','धन लाभ के योग।','यात्रा हो सकती है।','करियर में उन्नति।','परिवार के साथ समय।','आराम का दिन।'];let html='';days.forEach((d,i)=>{html+=`<div class="wcard"><div class="wday">${d}</div><div class="wtxt">${preds[i]}</div></div>`;});document.getElementById('weeklyContent').innerHTML=html;}
+function switchNav(i){document.querySelectorAll('.nitem').forEach((n,j)=>n.className='nitem'+(i===j?' on':''));document.getElementById('homeScreen').style.display=i===0||i===1?'block':'none';document.getElementById('detailScreen').style.display='none';document.getElementById('weeklyScreen').style.display=i===2?'block':'none';if(i===3)shareApp();}
+function updateNavText(){const L=getLang();L.nav.forEach((t,i)=>{const el=document.getElementById('n'+i+'t');if(el)el.textContent=t;});}
+setDate();buildGrid();buildWeekly();updateNavText();
+</script>
+</body>
+</html>
